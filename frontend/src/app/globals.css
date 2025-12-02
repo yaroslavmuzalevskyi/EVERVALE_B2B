@@ -1,15 +1,41 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Primary Colors */
+  --pr_dg: #032c1e;
+  --pr_lg: #59df78;
+  --pr_y: #fff364;
+  --pr_w: #f3ffff;
+  --pr_dr: #b91c1c;
+
+  /* Secondary Colors */
+  --sr_dg: #0e3c36;
+  --sr_lg: #6ef0a5;
+  --sr_w: #f3eed9;
+  --sr_g: #4a5855;
+
+  /* Gradients */
+  --gy-gradient: linear-gradient(90deg, #d7d74b 0%, #91db64 49%, #4cd680 100%);
+  --gw-gradient: linear-gradient(90deg, #6ef0a5 0%, #dffffa 100%);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Primary Colors */
+  --color-pr_dg: var(--pr_dg);
+  --color-pr_lg: var(--pr_lg);
+  --color-pr_y: var(--pr_y);
+  --color-pr_w: var(--pr_w);
+  --color-pr_dr: var(--pr_dr);
+
+  /* Secondary Colors */
+  --color-sr_dg: var(--sr_dg);
+  --color-sr_lg: var(--sr_lg);
+  --color-sr_w: var(--sr_w);
+  --color-sr_g: var(--sr_g);
+
+  /* Gradients */
+  --bg-gy-gradient: var(--gy-gradient);
+  --bg-gw-gradient: var(--gw-gradient);
 }
 
 @media (prefers-color-scheme: dark) {
