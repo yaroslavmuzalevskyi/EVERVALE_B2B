@@ -13,7 +13,7 @@ const tabs: SectionTab[] = [
 
 const Header = () => {
   return (
-    <div className=" w-full h-auto flex flex-row items-center justify-between">
+    <div className=" w-full h-auto flex flex-row items-center justify-between px-[130px] pt-[24px] ">
       <Logo />
       <SectionSlider
         tabs={tabs}
