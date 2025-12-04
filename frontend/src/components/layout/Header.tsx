@@ -13,16 +13,18 @@ const tabs: SectionTab[] = [
 
 const Header = () => {
   return (
-    <div className=" w-full h-auto flex flex-row items-center justify-between px-[130px] pt-[24px] ">
-      <Logo />
-      <SectionSlider
-        tabs={tabs}
-        onChange={(tab) => {
-          console.log("Active tab:", tab.id);
-        }}
-      />
-      <Button variant="header">Request Catalog</Button>
-    </div>
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-pr_dg/90 backdrop-blur">
+      <div className="mx-auto flex h-[96px] w-full max-w-[1440px] flex-row items-center justify-between px-[130px]">
+        <Logo />
+        <SectionSlider
+          tabs={tabs}
+          onChange={(tab) => {
+            console.log("Active tab:", tab.id);
+          }}
+        />
+        <Button variant="header">Request Catalog</Button>
+      </div>
+    </header>
   );
 };
 

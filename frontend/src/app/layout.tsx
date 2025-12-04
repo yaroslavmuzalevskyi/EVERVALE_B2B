@@ -17,9 +17,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${gilroy.variable} antialiased`}>
+        <Header />
         <div className="app-shell">
-          <Header />
-          {children}
+          <main className="pt-[110px] pb-16">{children}</main>
           <Footer />
         </div>
       </body>

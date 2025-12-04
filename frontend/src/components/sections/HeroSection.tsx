@@ -11,7 +11,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   contentWidthClass = "max-w-4xl",
 }) => {
   return (
-    <section className="flex w-full justify-center mt-52 mb-28">
+    <section className="flex w-full justify-center mt-52">
       <div
         className={cn(
           "flex w-full flex-col items-center gap-6 text-center px-4",
