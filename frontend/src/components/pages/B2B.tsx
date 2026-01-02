@@ -10,7 +10,7 @@ const B2B = () => {
     <div className="flex flex-col gap-16 sm:gap-24 md:gap-32 lg:gap-40 xl:gap-52 px-4 xl:px-32 lg:px-6 md:px-6 sm:px-4">
       <section
         id="hero"
-        className="scroll-mt-[70px] sm:scroll-mt-[80px] lg:scroll-mt-[96px]"
+        className="scroll-mt-[50px] sm:scroll-mt-[80px] lg:scroll-mt-[96px]"
       >
         <HeroSection />
       </section>

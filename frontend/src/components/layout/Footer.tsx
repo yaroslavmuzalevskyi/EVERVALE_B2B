@@ -112,7 +112,7 @@ const Footer = () => {
             />
           </div>
         </div>
-        <p className="text-sm text-white/60 text-center">
+        <p className="text-ag-14 text-white/60 text-center">
           ©2025 EVERVALE. All right reserved.
         </p>
       </div>

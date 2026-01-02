@@ -22,8 +22,8 @@ const ExplanationSection: React.FC<ExplanationSectionProps> = ({
           <InfoContainer
             title="Rooted in Science. Growing with Trust."
             textAlign="left"
-            titleClassName="text-2xl md:text-3xl lg:text-4xl text-pr_w"
-            contentClassName="text-base md:text-lg lg:text-xl text-pr_w"
+            titleClassName="display-lg text-pr_w"
+            contentClassName="display-md_thin text-pr_w"
             containerGap="gap-3"
           >
             Evervale is a new generation of cannabis genetics provider built on
@@ -45,8 +45,8 @@ const ExplanationSection: React.FC<ExplanationSectionProps> = ({
             <InfoContainer
               title="Продажа семян оптом"
               textAlign="left"
-              titleClassName="text-lg md:text-lg lg:text-2xl text-pr_dg"
-              contentClassName="text-sm md:text-sm lg:text-base text-pr_dg"
+              titleClassName="display-md_bold text-pr_dg"
+              contentClassName="display-sm text-pr_dg"
               containerGap="gap-2"
             >
               We promote responsible sourcing & environmentally
@@ -66,8 +66,8 @@ const ExplanationSection: React.FC<ExplanationSectionProps> = ({
             <InfoContainer
               title="Селекция под заказ"
               textAlign="left"
-              titleClassName="text-lg md:text-lg lg:text-2xl text-pr_dg"
-              contentClassName="text-sm md:text-sm lg:text-base text-pr_dg"
+              titleClassName="display-md_bold text-pr_dg"
+              contentClassName="display-sm text-pr_dg"
               containerGap="gap-2"
             >
               Constantly improving our genetics through science

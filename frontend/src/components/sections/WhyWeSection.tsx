@@ -73,9 +73,8 @@ const WhyWeSection: React.FC<WhyWeSectionProps> = ({
         {cards.map((card) => (
           <Card
             key={card.title}
-            width="w-full"
-            height=""
-            className="relative h-full overflow-hidden transition-all duration-300 ease-out hover:rounded-bl-[12px] hover:rounded-tr-[12px] hover:rounded-br-3xl hover:rounded-tl-3xl"
+            width="100%"
+            className="relative w-full min-h-[340px] overflow-hidden transition-all duration-300 ease-out md:min-h-0 md:aspect-[1.3/1] lg:aspect-[1.3/1] hover:rounded-bl-[12px] hover:rounded-tr-[12px] hover:rounded-br-3xl hover:rounded-tl-3xl"
           >
             <Image
               src={card.background}

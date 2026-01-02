@@ -17,7 +17,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   return (
     <section
       id={sectionId}
-      className={cn("flex w-full justify-center mt-52", className)}
+      className={cn(
+        "flex w-full justify-center mt-24 sm:mt-32 md:mt-40 lg:mt-54",
+        className
+      )}
     >
       <div
         className={cn(

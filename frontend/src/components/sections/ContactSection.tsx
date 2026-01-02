@@ -33,19 +33,21 @@ const ContactSection: React.FC<ContactSectionProps> = ({
         <div className="flex flex-col gap-10 md:flex-row md:justify-between">
           <div className="flex flex-col gap-8 text-pr_w md:justify-between">
             <div>
-              <p className="text-sm uppercase text-white/60">Email</p>
-              <p className="mt-1 text-2xl font-medium text-pr_y">
-                contact@evervale.com
+              <p className="text-ag-12 uppercase tracking-[0.08em] text-white/60">
+                Email
               </p>
+              <p className="mt-1 display-md text-pr_y">contact@evervale.com</p>
             </div>
             <div>
-              <p className="text-sm uppercase text-white/60">Phone Number</p>
-              <p className="mt-1 text-2xl font-medium text-pr_y">
-                +352 662 345 456
+              <p className="text-ag-12 uppercase tracking-[0.08em] text-white/60">
+                Phone Number
               </p>
+              <p className="mt-1 display-md text-pr_y">+352 662 345 456</p>
             </div>
             <div>
-              <p className="text-sm uppercase text-white/60">Social Media</p>
+              <p className="text-ag-12 uppercase tracking-[0.08em] text-white/60">
+                Social Media
+              </p>
               <div className="mt-3 flex flex-wrap gap-4">
                 <a
                   href="#"
@@ -58,7 +60,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({
                     height={10}
                     className="invert"
                   />
-                  <span className="text-sm">Facebook</span>
+                  <span className="text-ag-14">Facebook</span>
                 </a>
                 <a
                   href="#"
@@ -71,7 +73,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({
                     height={18}
                     className="invert"
                   />
-                  <span className="text-sm">Twitter</span>
+                  <span className="text-ag-14">Twitter</span>
                 </a>
                 <a
                   href="#"
@@ -84,7 +86,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({
                     height={18}
                     className="invert"
                   />
-                  <span className="text-sm">Instagram</span>
+                  <span className="text-ag-14">Instagram</span>
                 </a>
               </div>
             </div>
@@ -93,7 +95,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({
             <Card width="100%" className="bg-[#F2FFFD] text-pr_dg">
               <form className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium text-pr_dg">
+                  <label className="text-ag-14 font-medium text-pr_dg">
                     Full Name
                   </label>
                   <input
@@ -103,7 +105,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({
                   />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium text-pr_dg">
+                  <label className="text-ag-14 font-medium text-pr_dg">
                     Company Name
                   </label>
                   <input
@@ -113,7 +115,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({
                   />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium text-pr_dg">
+                  <label className="text-ag-14 font-medium text-pr_dg">
                     Company Email
                   </label>
                   <input
@@ -123,7 +125,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({
                   />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium text-pr_dg">
+                  <label className="text-ag-14 font-medium text-pr_dg">
                     Message
                   </label>
                   <textarea

@@ -59,7 +59,7 @@ export function SectionSlider({
                 key={tab.id}
                 type="button"
                 onClick={() => handleClick(tab)}
-                className="flex-1 cursor-pointer select-none px-2 sm:px-3 md:px-4 text-center text-sm sm:text-base md:text-lg font-medium transition-colors duration-200 ease-out"
+                className="nav-text flex-1 cursor-pointer select-none px-2 sm:px-3 md:px-4 text-center transition-colors duration-200 ease-out"
                 aria-selected={isActive}
                 aria-label={`Go to ${tab.label} section`}
               >

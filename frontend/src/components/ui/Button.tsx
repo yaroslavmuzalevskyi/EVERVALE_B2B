@@ -8,11 +8,11 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variants = {
   primary:
-    "w-auto h-[52px] bg-pr_y text-pr_dg rounded-4xl px-6 py-3 cursor-pointer transition-transform duration-200 ease-out hover:scale-105",
+    "btn-text w-auto h-[52px] bg-pr_y text-pr_dg rounded-4xl px-6 py-3 cursor-pointer transition-transform duration-200 ease-out hover:scale-105",
   header:
-    "w-auto h-[48px] bg-pr_y text-pr_dg rounded-4xl px-6 py-3 cursor-pointer transition-transform duration-200 ease-out hover:scale-105",
+    "btn-text w-auto h-[48px] bg-pr_y text-pr_dg rounded-4xl px-6 py-3 cursor-pointer transition-transform duration-200 ease-out hover:scale-105",
   contact:
-    "w-full h-[56px] rounded-2xl bg-pr_dg text-pr_w font-medium transition-colors transition-transform duration-200 ease-out hover:bg-[#021f15] hover:scale-105 focus:outline-none focus:ring-2 focus:ring-pr_y",
+    "btn-text w-full h-[56px] rounded-2xl bg-pr_dg text-pr_w font-medium transition-colors transition-transform duration-200 ease-out hover:bg-[#021f15] hover:scale-105 focus:outline-none focus:ring-2 focus:ring-pr_y",
 };
 
 const Button = ({
