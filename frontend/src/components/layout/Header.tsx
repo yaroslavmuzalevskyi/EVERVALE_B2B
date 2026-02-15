@@ -5,6 +5,7 @@ import Button from "../ui/Button";
 import { SectionSlider } from "@/src/navigation/SectionSlider";
 import { SectionTab } from "@/src/types/navigation";
 import { Menu, X } from "lucide-react";
+import { cn } from "../../lib/utils";
 
 const tabs: SectionTab[] = [
   { id: "hero", label: "Hero" },
@@ -16,6 +17,7 @@ const tabs: SectionTab[] = [
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileMenuMounted, setMobileMenuMounted] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const [isCatalogModalOpen, setIsCatalogModalOpen] = useState(false);
 
@@ -42,12 +44,25 @@ const Header = () => {
     };
   }, [isCatalogModalOpen]);
 
+  useEffect(() => {
+    if (mobileMenuOpen) setMobileMenuMounted(true);
+  }, [mobileMenuOpen]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const openCatalogModal = () => setIsCatalogModalOpen(true);
+    window.addEventListener("open-catalog-modal", openCatalogModal);
+    return () => {
+      window.removeEventListener("open-catalog-modal", openCatalogModal);
+    };
+  }, []);
+
   return (
     <>
       <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-pr_dg/90 backdrop-blur">
-        <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[130px]">
+        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-[130px]">
           {/* Desktop (1024px+) */}
-          <div className="hidden lg:flex h-[80px] lg:h-[96px] items-center justify-between">
+          <div className="hidden lg:flex h-[80px] lg:h-[88px] items-center justify-between gap-8">
             <Logo />
             <SectionSlider
               tabs={tabs}
@@ -62,41 +77,35 @@ const Header = () => {
             </Button>
           </div>
 
-          {/* Tablet (768px - 1024px) */}
-          <div className="hidden md:flex lg:hidden flex-col">
-            <div className="flex h-[80px] md:h-[96px] items-center justify-between">
-              <Logo />
-              <Button
-                variant="header"
-                className="text-sm md:text-base"
-                onClick={() => setIsCatalogModalOpen(true)}
-              >
-                Request Catalog
-              </Button>
-            </div>
-            <div className="w-full pb-4 md:pb-6 border-t border-white/10">
-              <SectionSlider
-                tabs={tabs}
-                activeId={activeSection}
-                onChange={handleTabClick}
-              />
-            </div>
-          </div>
-
-          {/* Mobile (< 768px) */}
-          <div className="md:hidden flex h-[70px] sm:h-[80px] items-center justify-between">
+          {/* Burger navigation (<= 1024px) */}
+          <div className="flex h-[72px] sm:h-[80px] md:h-[88px] items-center justify-between lg:hidden">
             <Logo />
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                className="relative p-2 hover:bg-white/10 rounded-lg transition-colors"
                 aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
               >
-                {mobileMenuOpen ? (
-                  <X size={24} className="text-white" />
-                ) : (
-                  <Menu size={24} className="text-white" />
-                )}
+                <span className="relative block h-6 w-6">
+                  <Menu
+                    size={24}
+                    className={cn(
+                      "absolute inset-0 text-white transition-all duration-200 ease-out",
+                      mobileMenuOpen
+                        ? "opacity-0 rotate-90 scale-75"
+                        : "opacity-100 rotate-0 scale-100",
+                    )}
+                  />
+                  <X
+                    size={24}
+                    className={cn(
+                      "absolute inset-0 text-white transition-all duration-200 ease-out",
+                      mobileMenuOpen
+                        ? "opacity-100 rotate-0 scale-100"
+                        : "opacity-0 -rotate-90 scale-75",
+                    )}
+                  />
+                </span>
               </button>
             </div>
           </div>
@@ -104,9 +113,17 @@ const Header = () => {
       </header>
 
       {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-x-0 top-[70px] sm:top-[80px] z-40 md:hidden border-b border-white/10 bg-pr_dg/95 backdrop-blur animate-in slide-in-from-top-2 duration-300">
-          <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6">
+      {mobileMenuMounted && (
+        <div
+          className={cn(
+            "fixed inset-x-0 top-[72px] z-40 border-b border-white/10 bg-pr_dg/95 backdrop-blur lg:hidden sm:top-[80px] md:top-[88px]",
+            mobileMenuOpen ? "mobile-menu-enter" : "mobile-menu-exit",
+          )}
+          onAnimationEnd={() => {
+            if (!mobileMenuOpen) setMobileMenuMounted(false);
+          }}
+        >
+          <div className="w-full px-4 sm:px-6 md:px-8 lg:px-[130px]">
             <div className="py-4 border-b border-white/10">
               <SectionSlider
                 tabs={tabs}
@@ -117,7 +134,7 @@ const Header = () => {
             <div className="py-4">
               <Button
                 variant="header"
-                className="w-full text-sm sm:text-base"
+                className="w-full"
                 onClick={() => {
                   setMobileMenuOpen(false);
                   setIsCatalogModalOpen(true);
@@ -138,13 +155,13 @@ const Header = () => {
             className="w-full max-w-md rounded-3xl bg-white p-6 text-pr_dg shadow-2xl"
             onClick={(event) => event.stopPropagation()}
           >
-            <h3 className="text-2xl font-semibold">Request Product Catalog</h3>
-            <p className="mt-2 text-sm text-pr_dg/70">
+            <h3 className="display-md_bold">Request Product Catalog</h3>
+            <p className="mt-2 display-sm text-pr_dg/70">
               Leave your business email and we will share the latest catalog
               with you.
             </p>
             <form className="mt-6 flex flex-col gap-4">
-              <label className="text-sm font-medium text-pr_dg">
+              <label className="text-ag-14 font-medium text-pr_dg">
                 Company Email
                 <input
                   type="email"

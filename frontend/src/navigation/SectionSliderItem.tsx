@@ -15,7 +15,7 @@ export const SectionSliderItem: React.FC<SectionSliderItemProps> = ({
     <button
       type="button"
       onClick={onClick}
-      className="flex-1 py-3 text-center text-lg font-medium transition-colors cursor-pointer "
+      className="nav-text flex-1 cursor-pointer py-3 text-center transition-colors"
     >
       <span className={isActive ? "text-white" : "text-emerald-950"}>
         {label}

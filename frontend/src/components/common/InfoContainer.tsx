@@ -28,6 +28,8 @@ interface InfoContainerProps {
   titleClassName?: string;
   contentClassName?: string;
   containerGap?: string;
+  reveal?: boolean;
+  revealDelay?: number;
 }
 
 const InfoContainer: React.FC<InfoContainerProps> = ({
@@ -42,6 +44,8 @@ const InfoContainer: React.FC<InfoContainerProps> = ({
   titleClassName = "",
   contentClassName = "",
   containerGap = "",
+  reveal = false,
+  revealDelay,
 }) => {
   // Get alignment class
   const alignmentClass =
@@ -169,8 +173,15 @@ const InfoContainer: React.FC<InfoContainerProps> = ({
     .filter(Boolean)
     .join(" ");
 
+  const revealStyle =
+    revealDelay !== undefined
+      ? ({ "--reveal-delay": `${revealDelay}ms` } as React.CSSProperties)
+      : undefined;
+
   return (
     <div
+      data-reveal={reveal ? "" : undefined}
+      style={revealStyle}
       className={`flex flex-col ${containerGap} ${alignmentClass} ${className}`}
     >
       <h1 className={titleClasses} style={getStyle(titleColor)}>

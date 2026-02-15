@@ -24,7 +24,8 @@ export function SectionSlider({
     const section = document.getElementById(tab.id);
     if (section) {
       const headerOffset = 140;
-      const elementPosition = section.getBoundingClientRect().top + window.scrollY;
+      const elementPosition =
+        section.getBoundingClientRect().top + window.scrollY;
       const offsetPosition = elementPosition - headerOffset;
       window.scrollTo({
         top: offsetPosition,
@@ -35,9 +36,9 @@ export function SectionSlider({
   };
 
   return (
-    <div className="w-full max-w-md mx-auto">
+    <div className="mx-auto lg:mx-0 w-full min-w-0 lg:max-w-[480px] lg:flex-1">
       {/* TRACK */}
-      <div className="relative flex h-[40px] sm:h-[45px] md:h-[49px] items-stretch rounded-full bg-[#F2FFFD] overflow-hidden">
+      <div className="relative flex h-[30px] sm:h-[34px] md:h-[38px] items-stretch rounded-full border border-black/10 bg-[color:var(--surface)] shadow-[0_8px_18px_rgba(0,0,0,0.18)] overflow-hidden">
         <div
           className="absolute inset-y-0 left-0 flex items-center transition-transform duration-300 ease-out"
           style={{
@@ -46,7 +47,7 @@ export function SectionSlider({
           }}
         >
           {/* INNER PILL: actual green highlight (smaller) */}
-          <div className="mx-1 h-[32px] sm:h-[36px] md:h-11 w-full rounded-full bg-[#13352D] shadow-lg transition-all duration-300 ease-out" />
+          <div className="mx-1 h-[22px] sm:h-[26px] md:h-[30px] w-full rounded-full bg-[#0d3326] shadow-[0_6px_16px_rgba(0,0,0,0.25)] transition-all duration-300 ease-out" />
         </div>
 
         {/* TABS */}
@@ -58,11 +59,13 @@ export function SectionSlider({
                 key={tab.id}
                 type="button"
                 onClick={() => handleClick(tab)}
-                className="flex-1 cursor-pointer select-none px-2 sm:px-3 md:px-4 text-center text-sm sm:text-base md:text-lg font-medium transition-colors duration-200 ease-out"
+                className="nav-text flex-1 cursor-pointer select-none px-2 sm:px-3 md:px-4 text-center transition-colors duration-200 ease-out"
                 aria-selected={isActive}
                 aria-label={`Go to ${tab.label} section`}
               >
-                <span className={isActive ? "text-white" : "text-[#13352D]"}>
+                <span
+                  className={isActive ? "text-white" : "text-[#0d3326]"}
+                >
                   {tab.label}
                 </span>
               </button>
