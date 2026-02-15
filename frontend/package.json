@@ -6,7 +6,8 @@
     "dev": "yarn dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "build:frontend": "yarn --cwd frontend build"
   },
   "dependencies": {
     "lucide-react": "^0.556.0",
