@@ -4,10 +4,12 @@ import ExplanationSection from "../sections/AboutSection";
 import WhyWeSection from "../sections/WhyWeSection";
 import SupplySection from "../sections/SupplySection";
 import ContactSection from "../sections/ContactSection";
+import RevealObserver from "../common/RevealObserver";
 
 const B2B = () => {
   return (
-    <div className="flex flex-col gap-16 sm:gap-24 md:gap-32 lg:gap-40 xl:gap-52 px-4 xl:px-32 lg:px-6 md:px-6 sm:px-4">
+    <div id="b2b-page" className="flex flex-col gap-[200px]">
+      <RevealObserver />
       <section
         id="hero"
         className="scroll-mt-[50px] sm:scroll-mt-[80px] lg:scroll-mt-[96px]"

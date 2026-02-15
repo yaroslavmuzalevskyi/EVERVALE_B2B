@@ -26,12 +26,24 @@ const FooterColumn: React.FC<FooterColumnProps> = ({
   className,
 }) => {
   return (
-    <div className={`w-full flex flex-col gap-4 whitespace-nowrap ${className ?? ""}`}>
-      <h2 className=" display-sm text-pr_y">{title}</h2>
-      <a href={href1}>{link2}</a>
-      <a href={href2}>{link1}</a>
-      <a href={href3}>{link3}</a>
-      <a href={href4}>{link4}</a>
+    <div
+      className={`w-full flex flex-col gap-3 whitespace-nowrap ${className ?? ""}`}
+    >
+      <h2 className="text-ag-12 uppercase tracking-[0.12em] text-pr_y">
+        {title}
+      </h2>
+      <a href={href1} className="text-ag-14 text-white/70 hover:text-white">
+        {link1}
+      </a>
+      <a href={href2} className="text-ag-14 text-white/70 hover:text-white">
+        {link2}
+      </a>
+      <a href={href3} className="text-ag-14 text-white/70 hover:text-white">
+        {link3}
+      </a>
+      <a href={href4} className="text-ag-14 text-white/70 hover:text-white">
+        {link4}
+      </a>
     </div>
   );
 };

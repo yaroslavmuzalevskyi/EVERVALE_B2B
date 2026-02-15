@@ -17,23 +17,24 @@ const SupplySection: React.FC<SupplySectionProps> = ({
   return (
     <section id={sectionId} className={cn("w-full", className)}>
       <Card
-        width="1180px"
-        height="640px"
-        className=" flex flex-col justify-center items-center gap-7"
+        width="100%"
+        height="auto"
+        className="flex w-full flex-col items-center justify-center gap-6 py-12 sm:py-14 md:py-16 min-h-[320px] sm:min-h-[360px] md:min-h-[420px]"
+        data-reveal
       >
         <Image
           src={badge}
           alt="badge icon"
-          className="mb-6"
-          width={180}
-          height={180}
+          className="mb-1"
+          width={140}
+          height={140}
         />
         <InfoContainer
           title="Our Supplier."
           textAlign="center"
-          titleClassName="display-xl text-pr_dg"
-          contentClassName="display-md_thin text-pr_dg"
-          containerGap="gap-3"
+          titleClassName="text-[clamp(2rem,3.4vw,3.2rem)] leading-[1.08] font-extrabold text-pr_dg"
+          contentClassName="display-md_thin text-pr_dg/70"
+          containerGap="gap-4"
         >
           We work exclusively with Green Future - a Thailand-based
           <br /> cultivator licensed under GACP, GMP, & ISO standards, ensuring

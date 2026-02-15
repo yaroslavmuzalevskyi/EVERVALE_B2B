@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import InfoContainer from "../common/InfoContainer";
@@ -53,49 +55,66 @@ const WhyWeSection: React.FC<WhyWeSectionProps> = ({
   className,
   sectionId,
 }) => {
+  const handleCatalogClick = () => {
+    if (typeof window === "undefined") return;
+    window.dispatchEvent(new Event("open-catalog-modal"));
+  };
+
   return (
-    <section id={sectionId} className={cn("flex flex-col gap-16", className)}>
+    <section id={sectionId} className={cn("flex flex-col gap-10", className)}>
       <div className="flex w-full flex-col items-left gap-6 text-center md:flex-row md:items-center md:justify-between md:text-left">
         <InfoContainer
-          title="Why we?"
-          titleClassName="display-xl text-pr_w"
-          contentClassName="display-md_thin text-pr_w"
-          containerGap="gap-3"
+          title="Why choose us?"
+          titleClassName="text-[clamp(2rem,3.4vw,3.2rem)] leading-[1.08] font-extrabold text-pr_w"
+          contentClassName="display-md_thin text-pr_w/70"
+          containerGap="gap-4"
+          reveal
+          revealDelay={40}
         >
           Evervale is a new generation of cannabis genetics <br /> provider
           built on transparency and precision.
         </InfoContainer>
         <div className="flex w-full justify-start md:w-auto md:justify-end">
-          <Button>Request product catalog</Button>
+          <Button
+            onClick={handleCatalogClick}
+            data-reveal
+            style={{ "--reveal-delay": "120ms" } as React.CSSProperties}
+          >
+            Request product catalog
+          </Button>
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-5 justify-items-center md:grid-cols-2">
-        {cards.map((card) => (
+      <div className="grid grid-cols-1 gap-6 justify-items-center sm:grid-cols-2">
+        {cards.map((card, index) => (
           <Card
             key={card.title}
             width="100%"
-            className="relative w-full min-h-[340px] overflow-hidden transition-all duration-300 ease-out md:min-h-0 md:aspect-[1.3/1] lg:aspect-[1.3/1] hover:rounded-bl-[12px] hover:rounded-tr-[12px] hover:rounded-br-3xl hover:rounded-tl-3xl"
+            className="relative w-full min-h-[280px] overflow-hidden transition-all duration-300 ease-out hover:-translate-y-1"
+            data-reveal
+            style={
+              { "--reveal-delay": `${120 + index * 80}ms` } as React.CSSProperties
+            }
           >
             <Image
               src={card.background}
               alt={`${card.title} background icon`}
-              className="pointer-events-none absolute -right-6 top-0 h-[300px] w-[300px] opacity-50"
+              className="pointer-events-none absolute -right-10 -top-8 h-[260px] w-[260px] opacity-30"
             />
             <div className="flex h-full flex-col justify-between gap-6">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#032D1F]">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0d3326]">
                 <Image
                   src={card.badgeIcon}
                   alt={`${card.title} icon`}
-                  width={48}
-                  height={48}
+                  width={36}
+                  height={36}
                 />
               </div>
               <InfoContainer
                 title={card.title}
                 textAlign="left"
                 titleClassName="display-md_bold text-pr_dg"
-                contentClassName="display-sm text-pr_dg"
-                containerGap="gap-2"
+                contentClassName="display-sm text-pr_dg/70"
+                containerGap="gap-3"
               >
                 {card.description}
               </InfoContainer>

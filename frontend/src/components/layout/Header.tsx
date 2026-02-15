@@ -48,12 +48,21 @@ const Header = () => {
     if (mobileMenuOpen) setMobileMenuMounted(true);
   }, [mobileMenuOpen]);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const openCatalogModal = () => setIsCatalogModalOpen(true);
+    window.addEventListener("open-catalog-modal", openCatalogModal);
+    return () => {
+      window.removeEventListener("open-catalog-modal", openCatalogModal);
+    };
+  }, []);
+
   return (
     <>
       <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-pr_dg/90 backdrop-blur">
-        <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[130px]">
+        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-[130px]">
           {/* Desktop (1024px+) */}
-          <div className="hidden lg:flex h-[80px] lg:h-[96px] items-center justify-between gap-10">
+          <div className="hidden lg:flex h-[80px] lg:h-[88px] items-center justify-between gap-8">
             <Logo />
             <SectionSlider
               tabs={tabs}
@@ -69,7 +78,7 @@ const Header = () => {
           </div>
 
           {/* Burger navigation (<= 1024px) */}
-          <div className="flex h-[70px] sm:h-[80px] md:h-[96px] items-center justify-between lg:hidden">
+          <div className="flex h-[72px] sm:h-[80px] md:h-[88px] items-center justify-between lg:hidden">
             <Logo />
             <div className="flex items-center gap-2">
               <button
@@ -84,7 +93,7 @@ const Header = () => {
                       "absolute inset-0 text-white transition-all duration-200 ease-out",
                       mobileMenuOpen
                         ? "opacity-0 rotate-90 scale-75"
-                        : "opacity-100 rotate-0 scale-100"
+                        : "opacity-100 rotate-0 scale-100",
                     )}
                   />
                   <X
@@ -93,7 +102,7 @@ const Header = () => {
                       "absolute inset-0 text-white transition-all duration-200 ease-out",
                       mobileMenuOpen
                         ? "opacity-100 rotate-0 scale-100"
-                        : "opacity-0 -rotate-90 scale-75"
+                        : "opacity-0 -rotate-90 scale-75",
                     )}
                   />
                 </span>
@@ -107,14 +116,14 @@ const Header = () => {
       {mobileMenuMounted && (
         <div
           className={cn(
-            "fixed inset-x-0 top-[70px] z-40 border-b border-white/10 bg-pr_dg/95 backdrop-blur lg:hidden sm:top-[80px] md:top-[96px]",
-            mobileMenuOpen ? "mobile-menu-enter" : "mobile-menu-exit"
+            "fixed inset-x-0 top-[72px] z-40 border-b border-white/10 bg-pr_dg/95 backdrop-blur lg:hidden sm:top-[80px] md:top-[88px]",
+            mobileMenuOpen ? "mobile-menu-enter" : "mobile-menu-exit",
           )}
           onAnimationEnd={() => {
             if (!mobileMenuOpen) setMobileMenuMounted(false);
           }}
         >
-          <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6">
+          <div className="w-full px-4 sm:px-6 md:px-8 lg:px-[130px]">
             <div className="py-4 border-b border-white/10">
               <SectionSlider
                 tabs={tabs}

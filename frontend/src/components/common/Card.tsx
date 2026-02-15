@@ -27,7 +27,7 @@ const Card: React.FC<CardProps> = ({
   return (
     <div
       className={cn(
-        "rounded-bl-3xl rounded-tr-3xl bg-white p-6 text-pr_dg ",
+        "rounded-tr-3xl rounded-bl-3xl bg-[color:var(--surface)] p-6 sm:p-7 md:p-8 text-pr_dg border border-[color:var(--surface-border)] shadow-[0_18px_50px_rgba(0,0,0,0.18)]",
         className
       )}
       style={computedStyle}

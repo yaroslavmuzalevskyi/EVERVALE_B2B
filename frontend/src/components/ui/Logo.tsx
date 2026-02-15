@@ -4,7 +4,7 @@ import EvervaleLogo from "@/public/logo.svg";
 
 const Logo = () => {
   return (
-    <Image src={EvervaleLogo} alt="Evervale Logo" width={150} height={50} />
+    <Image src={EvervaleLogo} alt="Evervale Logo" width={130} height={40} />
   );
 };
 

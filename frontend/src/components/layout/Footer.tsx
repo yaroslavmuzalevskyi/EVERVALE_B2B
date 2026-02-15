@@ -9,16 +9,16 @@ import instagram from "@/public/icons/instagram-logo.svg";
 
 const Footer = () => {
   return (
-    <footer className="w-full border-t border-white/30 bg-transparent">
-      <div className="mx-auto flex w-full max-w-[1440px] flex-col items-center justify-between gap-16 px-4 py-12 sm:px-4 md:px-6 lg:px-6 xl:px-32">
-        <div className="flex w-full flex-col items-center gap-6 sm:gap-4 md:flex-row md:items-start md:justify-between md:gap-8 lg:gap-12">
-          <div className="flex w-full flex-col gap-6 text-center items-center md:items-start md:text-left lg:max-w-sm">
+    <footer className="w-full border-t border-white/20 bg-transparent">
+      <div className="flex w-full flex-col items-center justify-between gap-12 px-4 py-14 sm:px-6 md:px-8 lg:px-[130px]">
+        <div className="flex w-full flex-col items-center gap-8 md:flex-row md:items-start md:justify-between md:gap-10">
+          <div className="flex w-full flex-col gap-5 text-center items-center md:items-start md:text-left lg:max-w-sm">
             <Logo />
             <div className="space-y-1 text-white/80">
               <p>+352 662 345 456</p>
               <p>contact@evervale.com</p>
             </div>
-            <div className="mt-3 flex gap-6">
+            <div className="mt-2 flex gap-5">
               <a
                 href="#"
                 className="flex items-center justify-center"
@@ -73,7 +73,7 @@ const Footer = () => {
               </a>
             </div>
           </div>
-          <div className="flex w-full flex-col items-center gap-10 text-center sm:flex-row sm:justify-center sm:gap-10 md:w-auto md:items-start md:justify-start md:gap-12">
+          <div className="flex w-full flex-col items-center gap-8 text-center sm:flex-row sm:justify-center sm:gap-10 md:w-auto md:items-start md:justify-start md:gap-12">
             <FooterColumn
               title="B2C"
               link1={"Support"}
