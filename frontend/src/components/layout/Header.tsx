@@ -57,6 +57,54 @@ const Header = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const getSectionEntries = () =>
+      tabs
+        .map((tab) => ({
+          id: tab.id,
+          element: document.getElementById(tab.id),
+        }))
+        .filter(
+          (entry): entry is { id: string; element: HTMLElement } =>
+            entry.element !== null,
+        );
+
+    let sectionEntries = getSectionEntries();
+
+    const syncActiveSectionFromScroll = () => {
+      if (!sectionEntries.length) {
+        sectionEntries = getSectionEntries();
+        if (!sectionEntries.length) return;
+      }
+
+      const scrollAnchor = window.scrollY + 180;
+      let nextActiveId = sectionEntries[0].id;
+
+      for (const entry of sectionEntries) {
+        if (entry.element.offsetTop <= scrollAnchor) {
+          nextActiveId = entry.id;
+        } else {
+          break;
+        }
+      }
+
+      setActiveSection((prev) => (prev === nextActiveId ? prev : nextActiveId));
+    };
+
+    syncActiveSectionFromScroll();
+    window.addEventListener("scroll", syncActiveSectionFromScroll, {
+      passive: true,
+    });
+    window.addEventListener("resize", syncActiveSectionFromScroll);
+
+    return () => {
+      window.removeEventListener("scroll", syncActiveSectionFromScroll);
+      window.removeEventListener("resize", syncActiveSectionFromScroll);
+    };
+  }, []);
+
   return (
     <>
       <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-pr_dg/90 backdrop-blur">

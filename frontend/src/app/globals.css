@@ -148,7 +148,7 @@ body {
     ),
     var(--background);
   color: var(--foreground);
-  font-family: var(--font-nunito), var(--font-gilroy), system-ui, -apple-system,
+  font-family: var(--font-gilroy), system-ui, -apple-system,
     BlinkMacSystemFont, sans-serif;
   position: relative;
   min-height: 100vh;
