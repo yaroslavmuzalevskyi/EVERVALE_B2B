@@ -19,26 +19,12 @@ export function SectionSlider({
   );
   const tabCount = tabs.length || 1;
 
-  const handleClick = (tab: SectionTab) => {
-    if (typeof window === "undefined") return;
-    const section = document.getElementById(tab.id);
-    if (section) {
-      const headerOffset = 140;
-      const elementPosition =
-        section.getBoundingClientRect().top + window.scrollY;
-      const offsetPosition = elementPosition - headerOffset;
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
-    }
-    onChange?.(tab);
-  };
+  const handleClick = (tab: SectionTab) => onChange?.(tab);
 
   return (
-    <div className="mx-auto lg:mx-0 w-full min-w-0 lg:max-w-[480px] lg:flex-1">
+    <div className="mx-auto lg:mx-0 w-full min-w-0 lg:max-w-[560px] lg:flex-1">
       {/* TRACK */}
-      <div className="relative flex h-[30px] sm:h-[34px] md:h-[38px] items-stretch rounded-full border border-black/10 bg-[color:var(--surface)] shadow-[0_8px_18px_rgba(0,0,0,0.18)] overflow-hidden">
+      <div className="relative flex h-[36px] sm:h-[40px] md:h-[44px] items-stretch rounded-full border border-black/10 bg-[color:var(--surface)] shadow-[0_8px_18px_rgba(0,0,0,0.18)] overflow-hidden">
         <div
           className="absolute inset-y-0 left-0 flex items-center transition-transform duration-300 ease-out"
           style={{
@@ -47,7 +33,7 @@ export function SectionSlider({
           }}
         >
           {/* INNER PILL: actual green highlight (smaller) */}
-          <div className="mx-1 h-[22px] sm:h-[26px] md:h-[30px] w-full rounded-full bg-[#0d3326] shadow-[0_6px_16px_rgba(0,0,0,0.25)] transition-all duration-300 ease-out" />
+          <div className="mx-1 h-[28px] sm:h-[32px] md:h-[36px] w-full rounded-full bg-[#0d3326] shadow-[0_6px_16px_rgba(0,0,0,0.25)] transition-all duration-300 ease-out" />
         </div>
 
         {/* TABS */}

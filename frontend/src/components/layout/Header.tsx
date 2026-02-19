@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Logo from "../ui/Logo";
 import Button from "../ui/Button";
 import { SectionSlider } from "@/src/navigation/SectionSlider";
@@ -20,21 +20,29 @@ const Header = () => {
   const [mobileMenuMounted, setMobileMenuMounted] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const [isCatalogModalOpen, setIsCatalogModalOpen] = useState(false);
+  const sectionPositionsRef = useRef<Array<{ id: string; top: number }>>([]);
+  const scrollFrameRef = useRef<number | null>(null);
+  const scrollTickingRef = useRef(false);
 
-  // Simple click handler that both scrolls AND updates the slider
-  const handleTabClick = (tab: SectionTab) => {
-    setActiveSection(tab.id);
+  const scrollToSection = useCallback((sectionId: string) => {
+    const section = document.getElementById(sectionId);
+    if (!section) return;
 
-    const section = document.getElementById(tab.id);
-    if (section) {
-      window.scrollTo({
-        top: section.offsetTop - 100,
-        behavior: "smooth",
-      });
-    }
+    const headerOffset = 110;
+    const top = section.getBoundingClientRect().top + window.scrollY - headerOffset;
+    window.scrollTo({ top, behavior: "smooth" });
+  }, []);
 
-    setMobileMenuOpen(false);
-  };
+  const handleTabClick = useCallback(
+    (tab: SectionTab) => {
+      setActiveSection((prev) => (prev === tab.id ? prev : tab.id));
+      scrollToSection(tab.id);
+      setMobileMenuOpen(false);
+    },
+    [scrollToSection],
+  );
+
+  const handleCatalogOpen = useCallback(() => setIsCatalogModalOpen(true), []);
 
   useEffect(() => {
     if (typeof document === "undefined") return;
@@ -60,54 +68,71 @@ const Header = () => {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const getSectionEntries = () =>
-      tabs
+    const recalculateSectionPositions = () => {
+      sectionPositionsRef.current = tabs
         .map((tab) => ({
           id: tab.id,
           element: document.getElementById(tab.id),
         }))
         .filter(
-          (entry): entry is { id: string; element: HTMLElement } =>
-            entry.element !== null,
-        );
-
-    let sectionEntries = getSectionEntries();
+          (entry): entry is { id: string; element: HTMLElement } => entry.element !== null,
+        )
+        .map((entry) => ({
+          id: entry.id,
+          top: entry.element.offsetTop,
+        }));
+    };
 
     const syncActiveSectionFromScroll = () => {
-      if (!sectionEntries.length) {
-        sectionEntries = getSectionEntries();
-        if (!sectionEntries.length) return;
+      if (!sectionPositionsRef.current.length) {
+        recalculateSectionPositions();
       }
+      if (!sectionPositionsRef.current.length) return;
 
       const scrollAnchor = window.scrollY + 180;
-      let nextActiveId = sectionEntries[0].id;
+      let nextActiveId = sectionPositionsRef.current[0].id;
 
-      for (const entry of sectionEntries) {
-        if (entry.element.offsetTop <= scrollAnchor) {
-          nextActiveId = entry.id;
-        } else {
-          break;
-        }
+      for (const entry of sectionPositionsRef.current) {
+        if (entry.top > scrollAnchor) break;
+        nextActiveId = entry.id;
       }
-
       setActiveSection((prev) => (prev === nextActiveId ? prev : nextActiveId));
     };
 
+    const scheduleActiveSectionSync = () => {
+      if (scrollTickingRef.current) return;
+      scrollTickingRef.current = true;
+      scrollFrameRef.current = window.requestAnimationFrame(() => {
+        scrollTickingRef.current = false;
+        scrollFrameRef.current = null;
+        syncActiveSectionFromScroll();
+      });
+    };
+
+    const handleLayoutChange = () => {
+      recalculateSectionPositions();
+      scheduleActiveSectionSync();
+    };
+
+    recalculateSectionPositions();
     syncActiveSectionFromScroll();
-    window.addEventListener("scroll", syncActiveSectionFromScroll, {
-      passive: true,
-    });
-    window.addEventListener("resize", syncActiveSectionFromScroll);
+    window.addEventListener("scroll", scheduleActiveSectionSync, { passive: true });
+    window.addEventListener("resize", handleLayoutChange);
+    window.addEventListener("load", handleLayoutChange);
 
     return () => {
-      window.removeEventListener("scroll", syncActiveSectionFromScroll);
-      window.removeEventListener("resize", syncActiveSectionFromScroll);
+      window.removeEventListener("scroll", scheduleActiveSectionSync);
+      window.removeEventListener("resize", handleLayoutChange);
+      window.removeEventListener("load", handleLayoutChange);
+      if (scrollFrameRef.current !== null) {
+        window.cancelAnimationFrame(scrollFrameRef.current);
+      }
     };
   }, []);
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-pr_dg/90 backdrop-blur">
+      <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-pr_dg/95 lg:bg-pr_dg/90 lg:backdrop-blur">
         <div className="w-full px-4 sm:px-6 md:px-8 lg:px-[130px]">
           {/* Desktop (1024px+) */}
           <div className="hidden lg:flex h-[80px] lg:h-[88px] items-center justify-between gap-8">
@@ -119,7 +144,7 @@ const Header = () => {
             />
             <Button
               variant="header"
-              onClick={() => setIsCatalogModalOpen(true)}
+              onClick={handleCatalogOpen}
             >
               Request Catalog
             </Button>
@@ -130,7 +155,7 @@ const Header = () => {
             <Logo />
             <div className="flex items-center gap-2">
               <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                onClick={() => setMobileMenuOpen((prev) => !prev)}
                 className="relative p-2 hover:bg-white/10 rounded-lg transition-colors"
                 aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
               >
@@ -164,7 +189,7 @@ const Header = () => {
       {mobileMenuMounted && (
         <div
           className={cn(
-            "fixed inset-x-0 top-[72px] z-40 border-b border-white/10 bg-pr_dg/95 backdrop-blur lg:hidden sm:top-[80px] md:top-[88px]",
+            "fixed inset-x-0 top-[72px] z-40 border-b border-white/10 bg-pr_dg/95 lg:hidden sm:top-[80px] md:top-[88px]",
             mobileMenuOpen ? "mobile-menu-enter" : "mobile-menu-exit",
           )}
           onAnimationEnd={() => {
@@ -185,7 +210,7 @@ const Header = () => {
                 className="w-full"
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  setIsCatalogModalOpen(true);
+                  handleCatalogOpen();
                 }}
               >
                 Request Catalog
