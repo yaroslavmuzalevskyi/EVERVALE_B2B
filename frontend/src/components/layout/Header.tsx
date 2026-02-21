@@ -29,7 +29,8 @@ const Header = () => {
     if (!section) return;
 
     const headerOffset = 110;
-    const top = section.getBoundingClientRect().top + window.scrollY - headerOffset;
+    const top =
+      section.getBoundingClientRect().top + window.scrollY - headerOffset;
     window.scrollTo({ top, behavior: "smooth" });
   }, []);
 
@@ -75,7 +76,8 @@ const Header = () => {
           element: document.getElementById(tab.id),
         }))
         .filter(
-          (entry): entry is { id: string; element: HTMLElement } => entry.element !== null,
+          (entry): entry is { id: string; element: HTMLElement } =>
+            entry.element !== null,
         )
         .map((entry) => ({
           id: entry.id,
@@ -116,7 +118,9 @@ const Header = () => {
 
     recalculateSectionPositions();
     syncActiveSectionFromScroll();
-    window.addEventListener("scroll", scheduleActiveSectionSync, { passive: true });
+    window.addEventListener("scroll", scheduleActiveSectionSync, {
+      passive: true,
+    });
     window.addEventListener("resize", handleLayoutChange);
     window.addEventListener("load", handleLayoutChange);
 
@@ -142,10 +146,7 @@ const Header = () => {
               activeId={activeSection}
               onChange={handleTabClick}
             />
-            <Button
-              variant="header"
-              onClick={handleCatalogOpen}
-            >
+            <Button variant="header" onClick={handleCatalogOpen}>
               Request Catalog
             </Button>
           </div>

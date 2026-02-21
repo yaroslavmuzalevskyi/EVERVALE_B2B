@@ -47,7 +47,7 @@ const ExplanationSection: React.FC<ExplanationSectionProps> = ({
               className="mb-4 md:mb-5 lg:mb-6 w-full h-auto rounded-tr-2xl rounded-bl-2xl"
             />
             <InfoContainer
-              title="Продажа семян оптом"
+              title="Wholesale Seed Sales"
               textAlign="left"
               titleClassName="display-md_bold text-pr_dg"
               contentClassName="display-sm text-pr_dg/70"
@@ -70,7 +70,7 @@ const ExplanationSection: React.FC<ExplanationSectionProps> = ({
               className="mb-4 md:mb-5 lg:mb-6 w-full h-auto rounded-tr-2xl rounded-bl-2xl"
             />
             <InfoContainer
-              title="Селекция под заказ"
+              title="Custom Breeding"
               textAlign="left"
               titleClassName="display-md_bold text-pr_dg"
               contentClassName="display-sm text-pr_dg/70"
