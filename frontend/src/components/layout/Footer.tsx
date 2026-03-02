@@ -17,38 +17,27 @@ const Footer = () => {
           <div className="flex w-full flex-col items-center gap-8 text-center sm:flex-row sm:justify-center sm:gap-10 md:w-auto md:items-start md:justify-start md:gap-12">
             <FooterColumn
               title="B2C"
-              link1={"Support"}
-              href1={""}
-              link2={"Community"}
-              href2={""}
-              link3={"Help"}
-              href3={""}
-              link4={"My Info"}
-              href4={""}
+              links={[
+                { label: "Home", href: "#hero" },
+                { label: "Seeds", href: "#supply" },
+                { label: "My Info", href: "#contact" },
+              ]}
               className="text-center sm:text-center md:text-left lg:text-left"
             />
             <FooterColumn
               title="B2B"
-              link1={"About Us"}
-              href1={""}
-              link2={"Welcome"}
-              href2={""}
-              link3={"Our Suplier"}
-              href3={""}
-              link4={"Contact Us"}
-              href4={""}
+              links={[
+                { label: "Home", href: "#hero" },
+                { label: "About Us", href: "#about" },
+                { label: "Why Us", href: "#why" },
+                { label: "Our Supplier", href: "#supply" },
+                { label: "Contact Us", href: "#contact" },
+              ]}
               className="text-center sm:text-center md:text-left lg:text-left"
             />
             <FooterColumn
               title="Legal"
-              link1={"Partners"}
-              href1={""}
-              link2={"About Us"}
-              href2={""}
-              link3={"Customers"}
-              href3={""}
-              link4={"Contact Us"}
-              href4={""}
+              links={[{ label: "Privacy", href: "/privacy" }]}
               className="text-center sm:text-center md:text-left lg:text-left"
             />
           </div>
