@@ -18,20 +18,20 @@ const FooterColumn: React.FC<FooterColumnProps> = ({
 }) => {
   return (
     <div
-      className={`w-full flex flex-col gap-3 whitespace-nowrap ${className ?? ""}`}
+      className={`flex w-full flex-col items-center gap-3 text-center lg:items-start lg:text-left ${className ?? ""}`}
     >
-      <h2 className="text-ag-12 uppercase tracking-[0.12em] text-pr_y">
-        {title}
-      </h2>
-      {links.map((link) => (
-        <a
-          key={`${title}-${link.label}`}
-          href={link.href}
-          className="text-ag-14 text-white/70 hover:text-white"
-        >
-          {link.label}
-        </a>
-      ))}
+      <h2 className="text-ag-14 font-semibold text-pr_w/90">{title}</h2>
+      <div className="flex flex-col items-center gap-2 lg:items-start">
+        {links.map((link) => (
+          <a
+            key={`${title}-${link.label}`}
+            href={link.href}
+            className="text-ag-14 font-normal text-pr_w/70 transition-colors duration-200 hover:text-pr_w/90"
+          >
+            {link.label}
+          </a>
+        ))}
+      </div>
     </div>
   );
 };

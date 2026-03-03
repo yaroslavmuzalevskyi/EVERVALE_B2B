@@ -19,7 +19,7 @@ const SupplySection: React.FC<SupplySectionProps> = ({
       <Card
         width="100%"
         height="auto"
-        className="flex w-full flex-col items-center justify-center gap-6 py-12 sm:py-14 md:py-16 min-h-[320px] sm:min-h-[360px] md:min-h-[420px]"
+        className="flex w-full flex-col items-center justify-center gap-6 py-12 sm:py-14 md:py-16 min-h-[360px] sm:min-h-[400px] md:min-h-[460px]"
         data-reveal
       >
         <Image

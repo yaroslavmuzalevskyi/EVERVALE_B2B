@@ -23,6 +23,8 @@ const Header = () => {
   const sectionPositionsRef = useRef<Array<{ id: string; top: number }>>([]);
   const scrollFrameRef = useRef<number | null>(null);
   const scrollTickingRef = useRef(false);
+  const programmaticScrollUntilRef = useRef(0);
+  const programmaticTargetRef = useRef<string | null>(null);
 
   const scrollToSection = useCallback((sectionId: string) => {
     const section = document.getElementById(sectionId);
@@ -37,6 +39,8 @@ const Header = () => {
   const handleTabClick = useCallback(
     (tab: SectionTab) => {
       setActiveSection((prev) => (prev === tab.id ? prev : tab.id));
+      programmaticTargetRef.current = tab.id;
+      programmaticScrollUntilRef.current = Date.now() + 1200;
       scrollToSection(tab.id);
       setMobileMenuOpen(false);
     },
@@ -90,6 +94,28 @@ const Header = () => {
         recalculateSectionPositions();
       }
       if (!sectionPositionsRef.current.length) return;
+
+      const activeProgrammaticTarget = programmaticTargetRef.current;
+      const programmaticScrollIsActive =
+        Date.now() < programmaticScrollUntilRef.current;
+
+      if (activeProgrammaticTarget && programmaticScrollIsActive) {
+        const targetSection = document.getElementById(activeProgrammaticTarget);
+        if (targetSection) {
+          const headerOffset = 110;
+          const targetTop =
+            targetSection.getBoundingClientRect().top + window.scrollY;
+          const expectedScrollY = Math.max(0, targetTop - headerOffset);
+
+          if (Math.abs(window.scrollY - expectedScrollY) > 24) {
+            return;
+          }
+        }
+      }
+
+      if (!programmaticScrollIsActive) {
+        programmaticTargetRef.current = null;
+      }
 
       const scrollAnchor = window.scrollY + 180;
       let nextActiveId = sectionPositionsRef.current[0].id;
