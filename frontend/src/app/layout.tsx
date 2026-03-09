@@ -7,7 +7,13 @@ import Footer from "../components/layout/Footer";
 
 export const metadata: Metadata = {
   title: "Evervale B2B | Wholesale Cannabis Seeds",
-  description: "Evervale B2B wholesale cannabis seeds for licensed businesses.",
+  description:
+    "Wholesale cannabis genetics for licensed distributors and seed banks. GACP certification, full traceability from seed to shipment.",
+  icons: {
+    icon: "/tab_logo.svg",
+    shortcut: "/tab_logo.svg",
+    apple: "/tab_logo.svg",
+  },
 };
 
 export default function RootLayout({

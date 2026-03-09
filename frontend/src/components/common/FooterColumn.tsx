@@ -1,39 +1,37 @@
-import React from "react";
+import Link from "next/link";
+import { cn } from "../../lib/utils";
 
 type FooterLink = {
   label: string;
   href: string;
 };
 
-interface FooterColumnProps {
+type FooterColumnProps = {
   title: string;
   links: FooterLink[];
   className?: string;
-}
+};
 
-const FooterColumn: React.FC<FooterColumnProps> = ({
+export default function FooterColumn({
   title,
   links,
   className,
-}) => {
+}: FooterColumnProps) {
   return (
-    <div
-      className={`flex w-full flex-col items-center gap-3 text-center lg:items-start lg:text-left ${className ?? ""}`}
-    >
-      <h2 className="text-ag-14 font-semibold text-pr_w/90">{title}</h2>
-      <div className="flex flex-col items-center gap-2 lg:items-start">
+    <div className={cn("flex flex-col gap-3 text-sm", className)}>
+      <p className="text-pr_w/90 font-semibold">{title}</p>
+      <ul className="flex flex-col gap-2 text-pr_w/70">
         {links.map((link) => (
-          <a
-            key={`${title}-${link.label}`}
-            href={link.href}
-            className="text-ag-14 font-normal text-pr_w/70 transition-colors duration-200 hover:text-pr_w/90"
-          >
-            {link.label}
-          </a>
+          <li key={`${title}-${link.label}`}>
+            <Link
+              href={link.href}
+              className="inline-flex w-full justify-center text-center lg:w-auto lg:justify-start lg:text-left hover:text-pr_w transition"
+            >
+              {link.label}
+            </Link>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
-};
-
-export default FooterColumn;
+}

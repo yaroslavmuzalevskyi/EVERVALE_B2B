@@ -2,7 +2,6 @@ import React from "react";
 import HeroSection from "../sections/HeroSection";
 import ExplanationSection from "../sections/AboutSection";
 import WhyWeSection from "../sections/WhyWeSection";
-import SupplySection from "../sections/SupplySection";
 import ContactSection from "../sections/ContactSection";
 import RevealObserver from "../common/RevealObserver";
 
@@ -27,12 +26,6 @@ const B2B = () => {
         className="scroll-mt-[70px] sm:scroll-mt-[80px] lg:scroll-mt-[96px]"
       >
         <WhyWeSection />
-      </section>
-      <section
-        id="supply"
-        className="scroll-mt-[70px] sm:scroll-mt-[80px] lg:scroll-mt-[96px]"
-      >
-        <SupplySection />
       </section>
       <section
         id="contact"

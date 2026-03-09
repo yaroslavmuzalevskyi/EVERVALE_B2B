@@ -1,53 +1,77 @@
-import React from "react";
 import FooterColumn from "../common/FooterColumn";
 import Logo from "../ui/Logo";
 
-const Footer = () => {
+const footerColumns = [
+  {
+    title: "SHOP",
+    links: [
+      { label: "Home", href: "/" },
+      { label: "Seeds", href: "/seeds" },
+      { label: "My Account", href: "/user_profile/profile" },
+    ],
+  },
+  {
+    title: "COMPANY",
+    links: [
+      { label: "About Us", href: "https://b2b.evervale.org/#about" },
+      { label: "Why Us", href: "https://b2b.evervale.org/#why" },
+      { label: "Contact Us", href: "https://b2b.evervale.org/#contact" },
+    ],
+  },
+  {
+    title: "SUPPORT",
+    links: [
+      { label: "Help/FAQ", href: "/" },
+      { label: "Shipping & Returns", href: "/" },
+      { label: "Community", href: "/" },
+    ],
+  },
+  {
+    title: "LEGAL",
+    links: [
+      { label: "Privacy Policy", href: "/privacy-policy" },
+      { label: "Terms & Conditions", href: "/terms-and-conditions" },
+      { label: "Return & Refund Policy", href: "/return-refund-policy" },
+      { label: "Disclaimer", href: "/disclaimer" },
+    ],
+  },
+];
+
+export default function Footer() {
   return (
-    <footer className="w-full border-t border-pr_w/20 bg-transparent">
-      <div className="flex w-full flex-col gap-10 px-4 py-12 sm:px-6 md:px-8 lg:px-12 xl:px-[130px]">
-        <div className="flex w-full flex-col items-center gap-8 text-center lg:flex-row lg:items-start lg:text-left">
-          <div className="flex w-full flex-col items-center gap-6 lg:items-start">
+    <footer className="w-full border-t border-pr_w/30 bg-transparent">
+      <div className="mx-auto flex w-full flex-col gap-10 px-6 py-12 sm:px-8 md:px-8 lg:px-12 xl:px-[130px]">
+        <div className="flex w-full flex-col items-center gap-10 text-center lg:flex-row lg:items-start lg:justify-between lg:text-left">
+          <div className="flex flex-col items-center gap-6 lg:items-start">
             <Logo />
-            <div className="space-y-1 text-ag-16 text-pr_w/80">
+            <div className="text-pr_w/80">
               <p>+352 662 345 456</p>
-              <p>contact@evervale.com</p>
+              <p>contact@evervale.org</p>
             </div>
           </div>
-          <div className="grid w-full grid-cols-1 gap-8 sm:grid-cols-2 lg:ml-auto lg:flex lg:w-auto lg:justify-end lg:gap-16 xl:gap-20">
-            <FooterColumn
-              title="B2C"
-              links={[
-                { label: "Home", href: "#hero" },
-                { label: "Seeds", href: "#supply" },
-                { label: "My Info", href: "#contact" },
-              ]}
-              className="w-full lg:w-[170px]"
-            />
-            <FooterColumn
-              title="B2B"
-              links={[
-                { label: "Home", href: "#hero" },
-                { label: "About Us", href: "#about" },
-                { label: "Why Us", href: "#why" },
-                { label: "Our Supplier", href: "#supply" },
-                { label: "Contact Us", href: "#contact" },
-              ]}
-              className="w-full lg:w-[170px]"
-            />
-            <FooterColumn
-              title="Legal"
-              links={[{ label: "Privacy", href: "/privacy" }]}
-              className="w-full sm:col-span-2 lg:w-auto"
-            />
+
+          <div className="grid gap-6 sm:grid-cols-2 lg:ml-auto lg:flex lg:w-auto lg:max-w-none lg:items-start lg:justify-end lg:gap-4 xl:gap-6">
+            {footerColumns.map((column) => (
+              <FooterColumn
+                key={column.title}
+                title={column.title}
+                links={column.links}
+                className={`w-full items-center text-center lg:items-start lg:text-left ${
+                  column.title === "LEGAL" ? "lg:w-auto" : "lg:w-[180px]"
+                }`}
+              />
+            ))}
           </div>
         </div>
-        <p className="mt-8 text-ag-14 text-center text-pr_w/60">
-          ©2025 EVERVALE. All right reserved.
-        </p>
+
+        <div className="mt-12 flex flex-col items-center gap-1 text-center text-sm text-pr_w/60">
+          <p>©2026 EVERVALE. All rights reserved.</p>
+          <p>
+            Sold strictly as collectible or souvenir seeds. Not intended for
+            illegal use where prohibited by law.
+          </p>
+        </div>
       </div>
     </footer>
   );
-};
-
-export default Footer;
+}

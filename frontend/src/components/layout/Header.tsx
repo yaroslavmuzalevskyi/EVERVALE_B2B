@@ -1,46 +1,63 @@
 "use client";
+
 import { useCallback, useEffect, useRef, useState } from "react";
 import Logo from "../ui/Logo";
 import Button from "../ui/Button";
-import { SectionSlider } from "@/src/navigation/SectionSlider";
-import { SectionTab } from "@/src/types/navigation";
+import { SectionSlider } from "@/navigation/SectionSlider";
+import { SectionTab } from "@/types/navigation";
 import { Menu, X } from "lucide-react";
 import { cn } from "../../lib/utils";
 
 const tabs: SectionTab[] = [
-  { id: "hero", label: "Hero" },
+  { id: "hero", label: "Home" },
   { id: "about", label: "About" },
-  { id: "why", label: "Why We" },
-  { id: "supply", label: "Supply" },
+  { id: "why", label: "Why Us" },
   { id: "contact", label: "Contact" },
 ];
+
+const HEADER_OFFSET = 110;
+
+// Сколько “живёт” защита от фликера после клика по табу
+const PROGRAMMATIC_SCROLL_LOCK_MS = 1200;
+
+// Доп. линия под хедером, где считаем “активной” секцию (чуть ниже хедера)
+const ACTIVE_LINE_EXTRA_PX = 12;
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileMenuMounted, setMobileMenuMounted] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const [isCatalogModalOpen, setIsCatalogModalOpen] = useState(false);
-  const sectionPositionsRef = useRef<Array<{ id: string; top: number }>>([]);
-  const scrollFrameRef = useRef<number | null>(null);
-  const scrollTickingRef = useRef(false);
+
+  // защита от “скачков” active tab во время smooth scroll по клику
   const programmaticScrollUntilRef = useRef(0);
   const programmaticTargetRef = useRef<string | null>(null);
+
+  // IntersectionObserver bookkeeping
+  const visibleRatiosRef = useRef<Record<string, number>>({});
+  const lastSetActiveRef = useRef<string>("hero");
 
   const scrollToSection = useCallback((sectionId: string) => {
     const section = document.getElementById(sectionId);
     if (!section) return;
 
-    const headerOffset = 110;
     const top =
-      section.getBoundingClientRect().top + window.scrollY - headerOffset;
+      section.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET;
+
     window.scrollTo({ top, behavior: "smooth" });
   }, []);
 
   const handleTabClick = useCallback(
     (tab: SectionTab) => {
+      // сразу подсветим нужный таб
       setActiveSection((prev) => (prev === tab.id ? prev : tab.id));
+      lastSetActiveRef.current = tab.id;
+
+      // lock от авто-переключений на время smooth scroll
       programmaticTargetRef.current = tab.id;
-      programmaticScrollUntilRef.current = Date.now() + 1200;
+      programmaticScrollUntilRef.current =
+        Date.now() + PROGRAMMATIC_SCROLL_LOCK_MS;
+
       scrollToSection(tab.id);
       setMobileMenuOpen(false);
     },
@@ -49,6 +66,7 @@ const Header = () => {
 
   const handleCatalogOpen = useCallback(() => setIsCatalogModalOpen(true), []);
 
+  // lock scroll when modal open
   useEffect(() => {
     if (typeof document === "undefined") return;
     document.body.style.overflow = isCatalogModalOpen ? "hidden" : "";
@@ -61,6 +79,7 @@ const Header = () => {
     if (mobileMenuOpen) setMobileMenuMounted(true);
   }, [mobileMenuOpen]);
 
+  // custom event support
   useEffect(() => {
     if (typeof window === "undefined") return;
     const openCatalogModal = () => setIsCatalogModalOpen(true);
@@ -70,93 +89,132 @@ const Header = () => {
     };
   }, []);
 
+  /**
+   * ✅ Главный фикс: IntersectionObserver вместо offsetTop
+   * Логика:
+   * - считаем “viewport” так, будто верх экрана начинается НЕ с 0, а под хедером
+   * - выбираем активной секцию с наибольшей intersectionRatio
+   * - если nearBottom -> активируем последнюю секцию
+   */
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const recalculateSectionPositions = () => {
-      sectionPositionsRef.current = tabs
-        .map((tab) => ({
-          id: tab.id,
-          element: document.getElementById(tab.id),
-        }))
-        .filter(
-          (entry): entry is { id: string; element: HTMLElement } =>
-            entry.element !== null,
-        )
-        .map((entry) => ({
-          id: entry.id,
-          top: entry.element.offsetTop,
-        }));
-    };
+    const sectionEls = tabs
+      .map((t) => document.getElementById(t.id))
+      .filter(Boolean) as HTMLElement[];
 
-    const syncActiveSectionFromScroll = () => {
-      if (!sectionPositionsRef.current.length) {
-        recalculateSectionPositions();
-      }
-      if (!sectionPositionsRef.current.length) return;
+    if (!sectionEls.length) return;
 
-      const activeProgrammaticTarget = programmaticTargetRef.current;
-      const programmaticScrollIsActive =
-        Date.now() < programmaticScrollUntilRef.current;
+    // thresholds: чем больше, тем точнее, но тяжелее (это нормальный компромисс)
+    const thresholds = Array.from({ length: 21 }, (_, i) => i / 20);
 
-      if (activeProgrammaticTarget && programmaticScrollIsActive) {
-        const targetSection = document.getElementById(activeProgrammaticTarget);
-        if (targetSection) {
-          const headerOffset = 110;
-          const targetTop =
-            targetSection.getBoundingClientRect().top + window.scrollY;
-          const expectedScrollY = Math.max(0, targetTop - headerOffset);
+    // “срезаем” верх viewport на высоту fixed header,
+    // чтобы секция считалась видимой, когда попала под хедер
+    const rootMarginTop = -(HEADER_OFFSET + ACTIVE_LINE_EXTRA_PX);
+    const rootMargin = `${rootMarginTop}px 0px -55% 0px`;
+    // снизу -55% делает переключение более “серединным” и убирает ранние перескоки вверх
 
-          if (Math.abs(window.scrollY - expectedScrollY) > 24) {
-            return;
-          }
+    const pickActiveFromRatios = () => {
+      // near bottom -> всегда последняя секция
+      const nearBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 2;
+
+      if (nearBottom) {
+        const lastId = tabs[tabs.length - 1]?.id;
+        if (lastId && lastSetActiveRef.current !== lastId) {
+          lastSetActiveRef.current = lastId;
+          setActiveSection(lastId);
         }
+        return;
       }
 
-      if (!programmaticScrollIsActive) {
+      const now = Date.now();
+      const lockActive = now < programmaticScrollUntilRef.current;
+      const lockedTarget = programmaticTargetRef.current;
+
+      // Во время programmatic scroll — не даём IO “перебивать” активный таб
+      if (lockActive && lockedTarget) {
+        if (lastSetActiveRef.current !== lockedTarget) {
+          lastSetActiveRef.current = lockedTarget;
+          setActiveSection(lockedTarget);
+        }
+        return;
+      } else if (!lockActive) {
         programmaticTargetRef.current = null;
       }
 
-      const scrollAnchor = window.scrollY + 180;
-      let nextActiveId = sectionPositionsRef.current[0].id;
+      // выбираем секцию с максимальным ratio
+      let bestId: string | null = null;
+      let bestRatio = -1;
 
-      for (const entry of sectionPositionsRef.current) {
-        if (entry.top > scrollAnchor) break;
-        nextActiveId = entry.id;
+      for (const t of tabs) {
+        const r = visibleRatiosRef.current[t.id] ?? 0;
+        if (r > bestRatio) {
+          bestRatio = r;
+          bestId = t.id;
+        }
       }
-      setActiveSection((prev) => (prev === nextActiveId ? prev : nextActiveId));
+
+      // Если ratios все нулевые (бывает на границах), fallback:
+      // активируем ближайшую секцию к “линии” под хедером.
+      if (!bestId || bestRatio <= 0.001) {
+        const activeLineY = HEADER_OFFSET + ACTIVE_LINE_EXTRA_PX;
+        let closestId = tabs[0].id;
+        let closestDist = Number.POSITIVE_INFINITY;
+
+        for (const t of tabs) {
+          const el = document.getElementById(t.id);
+          if (!el) continue;
+          const rect = el.getBoundingClientRect();
+          const dist = Math.abs(rect.top - activeLineY);
+          if (dist < closestDist) {
+            closestDist = dist;
+            closestId = t.id;
+          }
+        }
+        bestId = closestId;
+      }
+
+      if (bestId && lastSetActiveRef.current !== bestId) {
+        lastSetActiveRef.current = bestId;
+        setActiveSection(bestId);
+      }
     };
 
-    const scheduleActiveSectionSync = () => {
-      if (scrollTickingRef.current) return;
-      scrollTickingRef.current = true;
-      scrollFrameRef.current = window.requestAnimationFrame(() => {
-        scrollTickingRef.current = false;
-        scrollFrameRef.current = null;
-        syncActiveSectionFromScroll();
-      });
-    };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const id = (entry.target as HTMLElement).id;
+          visibleRatiosRef.current[id] = entry.isIntersecting
+            ? entry.intersectionRatio
+            : 0;
+        }
+        pickActiveFromRatios();
+      },
+      {
+        root: null,
+        threshold: thresholds,
+        rootMargin,
+      },
+    );
 
-    const handleLayoutChange = () => {
-      recalculateSectionPositions();
-      scheduleActiveSectionSync();
-    };
+    // init ratios to 0
+    visibleRatiosRef.current = {};
+    for (const t of tabs) visibleRatiosRef.current[t.id] = 0;
 
-    recalculateSectionPositions();
-    syncActiveSectionFromScroll();
-    window.addEventListener("scroll", scheduleActiveSectionSync, {
-      passive: true,
-    });
-    window.addEventListener("resize", handleLayoutChange);
-    window.addEventListener("load", handleLayoutChange);
+    for (const el of sectionEls) observer.observe(el);
+
+    // initial sync
+    pickActiveFromRatios();
+
+    // на resize/изменения высоты — пересчёт ощущается лучше
+    const onResize = () => pickActiveFromRatios();
+    window.addEventListener("resize", onResize);
 
     return () => {
-      window.removeEventListener("scroll", scheduleActiveSectionSync);
-      window.removeEventListener("resize", handleLayoutChange);
-      window.removeEventListener("load", handleLayoutChange);
-      if (scrollFrameRef.current !== null) {
-        window.cancelAnimationFrame(scrollFrameRef.current);
-      }
+      window.removeEventListener("resize", onResize);
+      observer.disconnect();
     };
   }, []);
 
@@ -183,7 +241,7 @@ const Header = () => {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setMobileMenuOpen((prev) => !prev)}
-                className="relative p-2 hover:bg-white/10 rounded-lg transition-colors"
+                className="relative rounded-lg p-2 transition-colors hover:bg-white/10"
                 aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
               >
                 <span className="relative block h-6 w-6">
@@ -224,7 +282,7 @@ const Header = () => {
           }}
         >
           <div className="w-full px-4 sm:px-6 md:px-8 lg:px-[130px]">
-            <div className="py-4 border-b border-white/10">
+            <div className="border-b border-white/10 py-4">
               <SectionSlider
                 tabs={tabs}
                 activeId={activeSection}
@@ -246,6 +304,8 @@ const Header = () => {
           </div>
         </div>
       )}
+
+      {/* Catalog Modal */}
       {isCatalogModalOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4"

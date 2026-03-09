@@ -30,14 +30,14 @@ const SupplySection: React.FC<SupplySectionProps> = ({
           height={140}
         />
         <InfoContainer
-          title="Our Supplier."
+          title="Out Suppliers."
           textAlign="center"
           titleClassName="text-[clamp(2rem,3.4vw,3.2rem)] leading-[1.08] font-extrabold text-pr_dg"
           contentClassName="display-md_thin text-pr_dg/70"
           containerGap="gap-4"
         >
-          We work exclusively with Green Future - a Thailand-based
-          <br /> cultivator licensed under GACP, GMP, & ISO standards, ensuring
+          Every batch follows strict quality protocols and documented controls
+          <br /> aligned with GACP, GMP, and ISO requirements, ensuring
           <br />
           full compliance and traceability from seed to shipment.
         </InfoContainer>

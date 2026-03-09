@@ -37,7 +37,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({
               <p className="text-ag-12 uppercase tracking-[0.12em] text-white/60">
                 Email
               </p>
-              <p className="mt-2 display-md text-pr_y">contact@evervale.com</p>
+              <p className="mt-2 display-md text-pr_y">contact@evervale.org</p>
             </div>
             <div
               data-reveal
