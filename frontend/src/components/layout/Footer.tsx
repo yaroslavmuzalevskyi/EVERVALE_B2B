@@ -5,7 +5,7 @@ const footerColumns = [
   {
     title: "SHOP",
     links: [
-      { label: "Home", href: "/https://evervale.org/" },
+      { label: "Home", href: "https://evervale.org/" },
       { label: "Seeds", href: "https://evervale.org/products" },
       {
         label: "My Account",
@@ -49,7 +49,7 @@ export default function Footer() {
             <Logo />
             <div className="text-pr_w/80">
               <p>+352 662 345 456</p>
-              <p>contact@evervale.org</p>
+              <p>info@evervale.org</p>
             </div>
           </div>
 
