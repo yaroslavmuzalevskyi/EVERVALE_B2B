@@ -18,7 +18,7 @@ const tabs: SectionTab[] = [
 const HEADER_OFFSET = 110;
 const PROGRAMMATIC_SCROLL_LOCK_MS = 1200;
 const ACTIVE_LINE_EXTRA_PX = 12;
-const CATALOG_API_URL = "https://vale-express-backend.onrender.com/forms/request-catalog";
+const CATALOG_API_URL = "https://backend.evervale.org/forms/request-catalog";
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const Header = () => {
