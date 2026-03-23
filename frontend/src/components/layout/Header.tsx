@@ -16,12 +16,10 @@ const tabs: SectionTab[] = [
 ];
 
 const HEADER_OFFSET = 110;
-
-// Сколько “живёт” защита от фликера после клика по табу
 const PROGRAMMATIC_SCROLL_LOCK_MS = 1200;
-
-// Доп. линия под хедером, где считаем “активной” секцию (чуть ниже хедера)
 const ACTIVE_LINE_EXTRA_PX = 12;
+const CATALOG_API_URL = "https://vale-express-backend.onrender.com/forms/request-catalog";
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -29,11 +27,13 @@ const Header = () => {
   const [activeSection, setActiveSection] = useState("hero");
   const [isCatalogModalOpen, setIsCatalogModalOpen] = useState(false);
 
-  // защита от “скачков” active tab во время smooth scroll по клику
+  const [catalogEmail, setCatalogEmail] = useState("");
+  const [catalogError, setCatalogError] = useState("");
+  const [catalogSuccess, setCatalogSuccess] = useState("");
+  const [isCatalogSubmitting, setIsCatalogSubmitting] = useState(false);
+
   const programmaticScrollUntilRef = useRef(0);
   const programmaticTargetRef = useRef<string | null>(null);
-
-  // IntersectionObserver bookkeeping
   const visibleRatiosRef = useRef<Record<string, number>>({});
   const lastSetActiveRef = useRef<string>("hero");
 
@@ -49,11 +49,9 @@ const Header = () => {
 
   const handleTabClick = useCallback(
     (tab: SectionTab) => {
-      // сразу подсветим нужный таб
       setActiveSection((prev) => (prev === tab.id ? prev : tab.id));
       lastSetActiveRef.current = tab.id;
 
-      // lock от авто-переключений на время smooth scroll
       programmaticTargetRef.current = tab.id;
       programmaticScrollUntilRef.current =
         Date.now() + PROGRAMMATIC_SCROLL_LOCK_MS;
@@ -64,9 +62,85 @@ const Header = () => {
     [scrollToSection],
   );
 
-  const handleCatalogOpen = useCallback(() => setIsCatalogModalOpen(true), []);
+  const resetCatalogForm = useCallback(() => {
+    setCatalogEmail("");
+    setCatalogError("");
+    setCatalogSuccess("");
+    setIsCatalogSubmitting(false);
+  }, []);
 
-  // lock scroll when modal open
+  const handleCatalogOpen = useCallback(() => {
+    setCatalogError("");
+    setCatalogSuccess("");
+    setIsCatalogModalOpen(true);
+  }, []);
+
+  const handleCatalogClose = useCallback(() => {
+    setIsCatalogModalOpen(false);
+    setCatalogError("");
+    setCatalogSuccess("");
+  }, []);
+
+  const handleCatalogSubmit = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+
+      if (isCatalogSubmitting) return;
+
+      const email = catalogEmail.trim().toLowerCase();
+
+      setCatalogError("");
+      setCatalogSuccess("");
+
+      if (!email) {
+        setCatalogError("Company email is required.");
+        return;
+      }
+
+      if (email.length > 255) {
+        setCatalogError("Company email must be at most 255 characters.");
+        return;
+      }
+
+      if (!EMAIL_REGEX.test(email)) {
+        setCatalogError("Enter a valid email address.");
+        return;
+      }
+
+      setIsCatalogSubmitting(true);
+
+      try {
+        const response = await fetch(CATALOG_API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        });
+
+        const contentType = response.headers.get("content-type");
+        const isJson = contentType?.includes("application/json");
+        const data = isJson ? await response.json() : null;
+
+        if (!response.ok) {
+          throw new Error(data?.message || "Failed to request catalog.");
+        }
+
+        setCatalogSuccess("Catalog request sent successfully.");
+        setCatalogEmail("");
+      } catch (error) {
+        setCatalogError(
+          error instanceof Error
+            ? error.message
+            : "Something went wrong. Please try again.",
+        );
+      } finally {
+        setIsCatalogSubmitting(false);
+      }
+    },
+    [catalogEmail, isCatalogSubmitting],
+  );
+
   useEffect(() => {
     if (typeof document === "undefined") return;
     document.body.style.overflow = isCatalogModalOpen ? "hidden" : "";
@@ -79,23 +153,15 @@ const Header = () => {
     if (mobileMenuOpen) setMobileMenuMounted(true);
   }, [mobileMenuOpen]);
 
-  // custom event support
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const openCatalogModal = () => setIsCatalogModalOpen(true);
+    const openCatalogModal = () => handleCatalogOpen();
     window.addEventListener("open-catalog-modal", openCatalogModal);
     return () => {
       window.removeEventListener("open-catalog-modal", openCatalogModal);
     };
-  }, []);
+  }, [handleCatalogOpen]);
 
-  /**
-   * ✅ Главный фикс: IntersectionObserver вместо offsetTop
-   * Логика:
-   * - считаем “viewport” так, будто верх экрана начинается НЕ с 0, а под хедером
-   * - выбираем активной секцию с наибольшей intersectionRatio
-   * - если nearBottom -> активируем последнюю секцию
-   */
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -105,17 +171,11 @@ const Header = () => {
 
     if (!sectionEls.length) return;
 
-    // thresholds: чем больше, тем точнее, но тяжелее (это нормальный компромисс)
     const thresholds = Array.from({ length: 21 }, (_, i) => i / 20);
-
-    // “срезаем” верх viewport на высоту fixed header,
-    // чтобы секция считалась видимой, когда попала под хедер
     const rootMarginTop = -(HEADER_OFFSET + ACTIVE_LINE_EXTRA_PX);
     const rootMargin = `${rootMarginTop}px 0px -55% 0px`;
-    // снизу -55% делает переключение более “серединным” и убирает ранние перескоки вверх
 
     const pickActiveFromRatios = () => {
-      // near bottom -> всегда последняя секция
       const nearBottom =
         window.innerHeight + window.scrollY >=
         document.documentElement.scrollHeight - 2;
@@ -133,7 +193,6 @@ const Header = () => {
       const lockActive = now < programmaticScrollUntilRef.current;
       const lockedTarget = programmaticTargetRef.current;
 
-      // Во время programmatic scroll — не даём IO “перебивать” активный таб
       if (lockActive && lockedTarget) {
         if (lastSetActiveRef.current !== lockedTarget) {
           lastSetActiveRef.current = lockedTarget;
@@ -144,7 +203,6 @@ const Header = () => {
         programmaticTargetRef.current = null;
       }
 
-      // выбираем секцию с максимальным ratio
       let bestId: string | null = null;
       let bestRatio = -1;
 
@@ -156,8 +214,6 @@ const Header = () => {
         }
       }
 
-      // Если ratios все нулевые (бывает на границах), fallback:
-      // активируем ближайшую секцию к “линии” под хедером.
       if (!bestId || bestRatio <= 0.001) {
         const activeLineY = HEADER_OFFSET + ACTIVE_LINE_EXTRA_PX;
         let closestId = tabs[0].id;
@@ -199,16 +255,13 @@ const Header = () => {
       },
     );
 
-    // init ratios to 0
     visibleRatiosRef.current = {};
     for (const t of tabs) visibleRatiosRef.current[t.id] = 0;
 
     for (const el of sectionEls) observer.observe(el);
 
-    // initial sync
     pickActiveFromRatios();
 
-    // на resize/изменения высоты — пересчёт ощущается лучше
     const onResize = () => pickActiveFromRatios();
     window.addEventListener("resize", onResize);
 
@@ -222,8 +275,7 @@ const Header = () => {
     <>
       <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-pr_dg/95 lg:bg-pr_dg/90 lg:backdrop-blur">
         <div className="w-full px-4 sm:px-6 md:px-8 lg:px-[130px]">
-          {/* Desktop (1024px+) */}
-          <div className="hidden lg:flex h-[80px] lg:h-[88px] items-center justify-between gap-8">
+          <div className="hidden h-[80px] items-center justify-between gap-8 lg:flex lg:h-[88px]">
             <Logo />
             <SectionSlider
               tabs={tabs}
@@ -235,8 +287,7 @@ const Header = () => {
             </Button>
           </div>
 
-          {/* Burger navigation (<= 1024px) */}
-          <div className="flex h-[72px] sm:h-[80px] md:h-[88px] items-center justify-between lg:hidden">
+          <div className="flex h-[72px] items-center justify-between sm:h-[80px] md:h-[88px] lg:hidden">
             <Logo />
             <div className="flex items-center gap-2">
               <button
@@ -270,11 +321,10 @@ const Header = () => {
         </div>
       </header>
 
-      {/* Mobile Menu */}
       {mobileMenuMounted && (
         <div
           className={cn(
-            "fixed inset-x-0 top-[72px] z-40 border-b border-white/10 bg-pr_dg/95 lg:hidden sm:top-[80px] md:top-[88px]",
+            "fixed inset-x-0 top-[72px] z-40 border-b border-white/10 bg-pr_dg/95 sm:top-[80px] md:top-[88px] lg:hidden",
             mobileMenuOpen ? "mobile-menu-enter" : "mobile-menu-exit",
           )}
           onAnimationEnd={() => {
@@ -305,11 +355,10 @@ const Header = () => {
         </div>
       )}
 
-      {/* Catalog Modal */}
       {isCatalogModalOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4"
-          onClick={() => setIsCatalogModalOpen(false)}
+          onClick={handleCatalogClose}
         >
           <div
             className="w-full max-w-md rounded-3xl bg-white p-6 text-pr_dg shadow-2xl"
@@ -320,19 +369,67 @@ const Header = () => {
               Leave your business email and we will share the latest catalog
               with you.
             </p>
-            <form className="mt-6 flex flex-col gap-4">
-              <label className="text-ag-14 font-medium text-pr_dg">
+
+            <form className="mt-6 flex flex-col gap-4" onSubmit={handleCatalogSubmit} noValidate>
+              <label className="text-ag-14 font-medium text-pr_dg" htmlFor="catalog-email">
                 Company Email
-                <input
-                  type="email"
-                  required
-                  placeholder="you@company.com"
-                  className="mt-2 h-12 w-full rounded-2xl border border-pr_dg/20 px-4 text-pr_dg outline-none transition focus:border-pr_dg focus:ring-2 focus:ring-pr_lg/40"
-                />
               </label>
-              <Button variant="contact" className="h-12 rounded-2xl">
-                Send
-              </Button>
+              <input
+                id="catalog-email"
+                name="email"
+                type="email"
+                required
+                maxLength={255}
+                autoComplete="email"
+                inputMode="email"
+                value={catalogEmail}
+                onChange={(e) => {
+                  setCatalogEmail(e.target.value);
+                  if (catalogError) setCatalogError("");
+                  if (catalogSuccess) setCatalogSuccess("");
+                }}
+                placeholder="you@company.com"
+                aria-invalid={Boolean(catalogError)}
+                aria-describedby={catalogError ? "catalog-email-error" : undefined}
+                className="h-12 w-full rounded-2xl border border-pr_dg/20 px-4 text-pr_dg outline-none transition focus:border-pr_dg focus:ring-2 focus:ring-pr_lg/40"
+              />
+
+              {catalogError && (
+                <p id="catalog-email-error" className="text-sm text-red-600">
+                  {catalogError}
+                </p>
+              )}
+
+              {catalogSuccess && (
+                <div
+                  className="rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700"
+                  role="status"
+                >
+                  {catalogSuccess}
+                </div>
+              )}
+
+              <div className="flex gap-3">
+                <Button
+                  type="submit"
+                  variant="contact"
+                  className="h-12 flex-1 rounded-2xl"
+                  disabled={isCatalogSubmitting}
+                >
+                  {isCatalogSubmitting ? "Sending..." : "Send"}
+                </Button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    handleCatalogClose();
+                    resetCatalogForm();
+                  }}
+                  className="h-12 rounded-2xl border border-pr_dg/20 px-4 text-pr_dg transition hover:bg-pr_dg/5"
+                >
+                  Close
+                </button>
+              </div>
             </form>
           </div>
         </div>
