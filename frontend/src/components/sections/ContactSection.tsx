@@ -6,7 +6,7 @@ import Card from "../common/Card";
 import Button from "../ui/Button";
 import { cn } from "../../lib/utils";
 
-const API_URL = "https://vale-express-backend.onrender.com/forms/contact-us";
+const API_URL = "https://backend.evervale.org/forms/contact-us";
 
 interface ContactSectionProps {
   className?: string;
