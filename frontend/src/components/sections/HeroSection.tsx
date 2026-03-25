@@ -43,7 +43,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           data-reveal
           style={{ "--reveal-delay": "140ms" } as React.CSSProperties}
         >
-          Professional-grade cannabis genetics for licensed businesses.
+          Professional-grade cannabis genetics for licensed businesses.{" "}
           <br className="hidden sm:block" />
           Certified. Compliant. Consistent.
         </p>
