@@ -10,9 +10,12 @@ export const metadata: Metadata = {
   description:
     "Wholesale cannabis genetics for licensed distributors and seed banks. GACP certification, full traceability from seed to shipment.",
   icons: {
-    icon: "/tab_logo.svg",
-    shortcut: "/tab_logo.svg",
-    apple: "/tab_logo.svg",
+    icon: [
+      { url: "/Favicon.svg", type: "image/svg+xml" },
+      { url: "/Favicon.svg", rel: "shortcut icon" },
+    ],
+    shortcut: "/Favicon.svg",
+    apple: "/Favicon.svg",
   },
 };
 
