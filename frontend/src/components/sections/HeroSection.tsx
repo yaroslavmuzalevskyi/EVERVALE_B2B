@@ -3,6 +3,7 @@
 import React from "react";
 import Button from "../ui/Button";
 import { cn } from "../../lib/utils";
+import { triggerCatalogDownload } from "../../lib/catalogDownload";
 
 interface HeroSectionProps {
   contentWidthClass?: string;
@@ -16,8 +17,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   sectionId,
 }) => {
   const handleCatalogClick = () => {
-    if (typeof window === "undefined") return;
-    window.dispatchEvent(new Event("open-catalog-modal"));
+    triggerCatalogDownload();
   };
 
   return (

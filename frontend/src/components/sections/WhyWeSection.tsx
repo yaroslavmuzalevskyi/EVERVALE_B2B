@@ -14,6 +14,7 @@ import growIcon from "../../../public/icons/grow.svg";
 import dnaIcon from "../../../public/icons/dna.svg";
 import chainIcon from "../../../public/icons/chain.svg";
 import { cn } from "../../lib/utils";
+import { triggerCatalogDownload } from "../../lib/catalogDownload";
 
 const cards = [
   {
@@ -56,8 +57,7 @@ const WhyWeSection: React.FC<WhyWeSectionProps> = ({
   sectionId,
 }) => {
   const handleCatalogClick = () => {
-    if (typeof window === "undefined") return;
-    window.dispatchEvent(new Event("open-catalog-modal"));
+    triggerCatalogDownload();
   };
 
   return (
