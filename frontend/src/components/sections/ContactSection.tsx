@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import instagram from "../../../public/icons/instagram-logo.svg";
+import linkedin from "../../../public/icons/linkedin-logo.svg";
 import InfoContainer from "../common/InfoContainer";
 import Card from "../common/Card";
 import Button from "../ui/Button";
@@ -195,7 +198,31 @@ const ContactSection: React.FC<ContactSectionProps> = ({
               <p className="text-ag-12 uppercase tracking-[0.12em] text-white/60">
                 Phone Number
               </p>
-              <p className="mt-2 display-md text-pr_y">+352 662 345 456</p>
+              <p className="mt-2 display-md text-pr_y">+35797816242</p>
+            </div>
+
+            <div>
+              <p className="text-ag-12 uppercase tracking-[0.12em] text-white/60">
+                Social Media
+              </p>
+              <div className="mt-4 flex gap-3">
+                <a
+                  href="#"
+                  aria-label="Instagram"
+                  className="flex items-center gap-3 rounded-full border border-pr_y/40 px-6 py-3 text-pr_w transition hover:border-pr_y hover:bg-pr_y/10"
+                >
+                  <Image src={instagram} alt="Instagram" width={18} height={18} className="filter brightness-0 invert" />
+                  <span className="text-ag-14">Instagram</span>
+                </a>
+                <a
+                  href="#"
+                  aria-label="LinkedIn"
+                  className="flex items-center gap-3 rounded-full border border-pr_y/40 px-6 py-3 text-pr_w transition hover:border-pr_y hover:bg-pr_y/10"
+                >
+                  <Image src={linkedin} alt="LinkedIn" width={18} height={18} className="filter brightness-0 invert" />
+                  <span className="text-ag-14">LinkedIn</span>
+                </a>
+              </div>
             </div>
           </div>
 
