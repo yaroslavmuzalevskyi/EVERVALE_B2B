@@ -56,7 +56,7 @@ export default function Footer() {
             </div>
             <div className="flex gap-5">
               <a
-                href="instagram.com/evervale_official?igsh=MXY2YjB1aHd6emJlaQ=="
+                href="https://instagram.com/evervale_official?igsh=MXY2YjB1aHd6emJlaQ=="
                 className="flex items-center justify-center"
                 aria-label="Instagram"
               >

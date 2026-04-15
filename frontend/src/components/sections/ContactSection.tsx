@@ -52,7 +52,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({
   }, []);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
 
@@ -207,19 +207,31 @@ const ContactSection: React.FC<ContactSectionProps> = ({
               </p>
               <div className="mt-4 flex gap-3">
                 <a
-                  href="#"
+                  href="https://instagram.com/evervale_official?igsh=MXY2YjB1aHd6emJlaQ=="
                   aria-label="Instagram"
                   className="flex items-center gap-3 rounded-full border border-pr_y/40 px-6 py-3 text-pr_w transition hover:border-pr_y hover:bg-pr_y/10"
                 >
-                  <Image src={instagram} alt="Instagram" width={18} height={18} className="filter brightness-0 invert" />
+                  <Image
+                    src={instagram}
+                    alt="Instagram"
+                    width={18}
+                    height={18}
+                    className="filter brightness-0 invert"
+                  />
                   <span className="text-ag-14">Instagram</span>
                 </a>
                 <a
-                  href="#"
+                  href="https://www.linkedin.com/company/evervale/"
                   aria-label="LinkedIn"
                   className="flex items-center gap-3 rounded-full border border-pr_y/40 px-6 py-3 text-pr_w transition hover:border-pr_y hover:bg-pr_y/10"
                 >
-                  <Image src={linkedin} alt="LinkedIn" width={18} height={18} className="filter brightness-0 invert" />
+                  <Image
+                    src={linkedin}
+                    alt="LinkedIn"
+                    width={18}
+                    height={18}
+                    className="filter brightness-0 invert"
+                  />
                   <span className="text-ag-14">LinkedIn</span>
                 </a>
               </div>
@@ -347,7 +359,9 @@ const ContactSection: React.FC<ContactSectionProps> = ({
                     minLength={10}
                     maxLength={3000}
                     aria-invalid={Boolean(errors.message)}
-                    aria-describedby={errors.message ? "message-error" : undefined}
+                    aria-describedby={
+                      errors.message ? "message-error" : undefined
+                    }
                     placeholder="Let us know how we can help"
                     className="h-full min-h-[160px] rounded-lg border border-pr_dg/40 bg-[color:var(--surface)] px-4 py-3 text-pr_dg outline-none transition focus:border-pr_dg focus:ring-2 focus:ring-pr_lg/30"
                   />
