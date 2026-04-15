@@ -5,6 +5,9 @@ import "./globals.css";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 
+import Script from "next/script";
+import { GoogleTagManager } from '@next/third-parties/google';
+
 export const metadata: Metadata = {
   title: "Evervale B2B | Wholesale Cannabis Seeds",
   description:
@@ -26,7 +29,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <Script 
+          id="cookieyes"
+          src="https://cdn-cookieyes.com/client_data/72e63957d3c30f044edeeefae53db61e/script.js"
+          strategy="beforeInteractive" 
+        />
+      </head>
       <body className={`${nunitoSans.variable} ${gilroy.variable} antialiased`}>
+        <GoogleTagManager gtmId="GTM-T3SWJ2DB" />
         <Header />
         <div className="app-shell">
           <main className="px-4 sm:px-6 md:px-8 lg:px-[130px] pt-[140px] pb-[140px] lg:pt-[200px] lg:pb-[200px]">
